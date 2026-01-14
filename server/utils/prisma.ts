@@ -16,7 +16,7 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
-    log: ["query"],
+    ...(process.env.NODE_ENV === "test" ? {} : { log: ["query"] }),
   });
 
 // 開発環境ではグローバルに保存して再利用

@@ -14,10 +14,20 @@ describe("TODO API", () => {
     });
 
     it("TODOリストを作成日時の降順で取得", async () => {
+      const createdAt1 = new Date("2024-01-01T00:00:00.000Z");
+      const createdAt2 = new Date("2024-01-02T00:00:00.000Z");
+      const createdAt3 = new Date("2024-01-03T00:00:00.000Z");
+
       // 3つのTODOを作成
-      await prisma.todo.create({ data: { title: "最初のTODO" } });
-      await prisma.todo.create({ data: { title: "2番目のTODO" } });
-      await prisma.todo.create({ data: { title: "3番目のTODO" } });
+      await prisma.todo.create({
+        data: { title: "最初のTODO", createdAt: createdAt1 },
+      });
+      await prisma.todo.create({
+        data: { title: "2番目のTODO", createdAt: createdAt2 },
+      });
+      await prisma.todo.create({
+        data: { title: "3番目のTODO", createdAt: createdAt3 },
+      });
 
       const todos = await prisma.todo.findMany({
         orderBy: { createdAt: "desc" },

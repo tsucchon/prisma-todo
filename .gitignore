@@ -27,4 +27,13 @@ logs
 *.db
 *.db-journal
 
+# Test coverage
+coverage
+
+# Playwright
+.playwright-mcp
+
+# Nuxt RC
+.nuxtrc
+
 /app/generated/prisma

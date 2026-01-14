@@ -1,0 +1,2 @@
+const testDatabaseUrl = process.env.TEST_DATABASE_URL || "file:./prisma/test.db";
+process.env.DATABASE_URL = testDatabaseUrl;

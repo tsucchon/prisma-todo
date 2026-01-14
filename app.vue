@@ -1,13 +1,11 @@
 <script setup lang="ts">
-  // interface
-  interface TodoList {
-    id: number;
-    title: string;
-  }
-  // 入力値
-  const todo = ref<string>("");
-  // TODOを格納する配列
-  const todoList = ref<TodoList[]>([]);
+interface TodoList {
+  id: number;
+  title: string;
+}
+
+const todo = ref<string>("");
+const todoList = ref<TodoList[]>([]);
   
   // TODOリストに追加
   const addTodo = async () => {

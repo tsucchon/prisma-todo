@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test:setup": "node -e \"process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'file:./prisma/test.db'; require('child_process').execSync('prisma migrate deploy', { stdio: 'inherit', env: process.env });\"",
+    "test:setup": "node -e \"const url = process.env.TEST_DATABASE_URL || 'file:./prisma/test.db'; require('child_process').execSync('prisma db push --url ' + url, { stdio: 'inherit' });\"",
     "test": "npm run test:setup && vitest",
     "test:ui": "npm run test:setup && vitest --ui",
     "test:coverage": "npm run test:setup && vitest --coverage",

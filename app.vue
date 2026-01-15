@@ -6,6 +6,9 @@ interface TodoList {
 
 const todo = ref<string>("");
 const todoList = ref<TodoList[]>([]);
+// 編集状態管理
+const editingId = ref<number | null>(null);
+const editingTitle = ref<string>("");
   
   // TODOリストに追加
   const addTodo = async () => {
@@ -26,6 +29,33 @@ const todoList = ref<TodoList[]>([]);
   const deleteTodo = async (id: number) => {
     try {
       await $fetch(`/api/todos/${id}`, { method: "DELETE" });
+      await fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 編集モードを開始
+  const startEdit = (todo: TodoList) => {
+    editingId.value = todo.id;
+    editingTitle.value = todo.title;
+  };
+
+  // 編集をキャンセル
+  const cancelEdit = () => {
+    editingId.value = null;
+    editingTitle.value = "";
+  };
+
+  // TODOを更新
+  const updateTodo = async (id: number) => {
+    try {
+      if (!editingTitle.value.trim()) return;
+      await $fetch(`/api/todos/${id}`, {
+        method: "PUT",
+        body: { title: editingTitle.value },
+      });
+      cancelEdit();
       await fetchTodos();
     } catch (error) {
       console.error(error);
@@ -73,10 +103,24 @@ const todoList = ref<TodoList[]>([]);
                   :key="todo.id"
                   class="text-lg flex justify-between items-center py-2"
                 >
-                  <span class="ml-2">{{ todo.title }}</span>
-                  <el-button type="danger" @click="deleteTodo(todo.id)"
-                    >削除</el-button
-                  >
+                  <!-- 編集モードでない場合 -->
+                  <template v-if="editingId !== todo.id">
+                    <span class="ml-2">{{ todo.title }}</span>
+                    <div>
+                      <el-button @click="startEdit(todo)">編集</el-button>
+                      <el-button type="danger" @click="deleteTodo(todo.id)"
+                        >削除</el-button
+                      >
+                    </div>
+                  </template>
+                  <!-- 編集モードの場合 -->
+                  <template v-else>
+                    <el-input v-model="editingTitle" class="flex-1" />
+                    <div class="ml-2">
+                      <el-button @click="updateTodo(todo.id)">保存</el-button>
+                      <el-button @click="cancelEdit()">キャンセル</el-button>
+                    </div>
+                  </template>
                 </div>
               </el-card>
             </el-col>
